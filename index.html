@@ -6,6 +6,7 @@
   <title>Neider Peña | Analista de Datos &amp; Desarrollador Full Stack Junior</title>
   <meta name="description" content="Neider Steven Peña Riaño: analista de datos (SQL, Excel, Power BI) y desarrollador full stack junior (Node.js, React Native, Flutter). Disponible para vacantes y proyectos freelance.">
   <meta name="theme-color" content="#0b1220">
+  <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
   <script src="js/translations.js" defer></script>
   <script src="js/script.js" defer></script>
@@ -15,7 +16,7 @@
 
   <!-- ===================== NAVEGACIÓN ===================== -->
   <header class="header" id="nav">
-    <nav class="nav container" aria-label="Navegación principal">
+    <nav class="nav container" aria-label="Navegación principal" data-i18n-aria="nav.aria">
       <a href="#hero" class="nav__logo">
         <span class="nav__logo-mark" aria-hidden="true">NP</span>
         <span class="nav__logo-text">Neider Peña</span>
@@ -224,7 +225,7 @@ app.<span class="tok-fn">post</span>(<span class="tok-str">'/api/contact'</span>
         <p class="section__eyebrow" data-i18n="projects.eyebrow">Proyectos</p>
         <h2 class="section__title" data-i18n="projects.title">Trabajo reciente</h2>
 
-        <div class="filters" role="group" aria-label="Filtrar proyectos">
+        <div class="filters" role="group" aria-label="Filtrar proyectos" data-i18n-aria="projects.filter_label">
           <button type="button" class="filters__btn is-active" data-filter="all" aria-pressed="true" data-i18n="projects.f_all">Todos</button>
           <button type="button" class="filters__btn" data-filter="data" aria-pressed="false" data-i18n="projects.f_data">Datos</button>
           <button type="button" class="filters__btn" data-filter="dev" aria-pressed="false" data-i18n="projects.f_dev">Desarrollo</button>
@@ -271,7 +272,7 @@ app.<span class="tok-fn">post</span>(<span class="tok-str">'/api/contact'</span>
             <a class="project__link" href="https://github.com/Neidercreew" target="_blank" rel="noopener noreferrer" data-i18n="projects.view_code">Ver código</a>
           </article>
 
-        <article class="project" data-category="data">
+          <article class="project" data-category="data">
             <span class="tag tag--data" data-i18n="projects.p5_tag">Excel · Reto de práctica</span>
             <h3 class="project__title" data-i18n="projects.p5_title">Resumen automático de estados</h3>
             <p class="project__text" data-i18n="projects.p5_text">Reto propio: fórmulas combinadas con TEXTJOIN, IFS y TEXT que generan resúmenes de estado y prioridades a partir de una tabla de registros.</p>
@@ -300,7 +301,7 @@ app.<span class="tok-fn">post</span>(<span class="tok-str">'/api/contact'</span>
         <h2 class="section__title" data-i18n="contact.title">Hablemos</h2>
         <p class="contact__intro" data-i18n="contact.intro">¿Tienes una vacante o un proyecto en mente? Escríbeme y te respondo lo antes posible.</p>
 
-        <form class="form" id="contact-form">
+        <form class="form" id="contact-form" method="post">
           <fieldset class="form__fieldset">
             <legend class="form__legend" data-i18n="contact.interest_legend">¿Me contactas por una vacante o por un proyecto freelance?</legend>
             <div class="form__options">
