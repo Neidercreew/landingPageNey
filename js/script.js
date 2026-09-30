@@ -311,10 +311,16 @@
 
   /* ---------- 6. ANALYTICS ---------- */
 
+  // Un registro por CTA y ubicación en cada visita: cuida el límite de registros
+  // del plan gratuito de Airtable sin perder la medición de conversión
+  const trackedClicks = new Set();
+
   // Rastreo silencioso (backend.md §4.1): si falla, no debe afectar al visitante
   function trackCtaClick(interest, source) {
     const ctaType = CTA_TYPES[interest];
-    if (!ctaType) return;
+    const clickKey = `${ctaType}:${source}`;
+    if (!ctaType || trackedClicks.has(clickKey)) return;
+    trackedClicks.add(clickKey);
 
     postJSON(
       CONFIG.endpoints.ctaClick,
@@ -342,11 +348,32 @@
 
   /* ---------- 7. reCAPTCHA ---------- */
 
-  // Devuelve null mientras reCAPTCHA no esté configurado (paso de backend)
-  function getRecaptchaToken() {
-    if (!CONFIG.recaptchaSiteKey || typeof window.grecaptcha === "undefined") {
-      return Promise.resolve(null);
+  let recaptchaLoader = null;
+
+  // Carga diferida: el script de Google solo se descarga cuando el visitante
+  // empieza a usar el formulario, así no frena la carga inicial de la página
+  function loadRecaptcha() {
+    if (!CONFIG.recaptchaSiteKey) return Promise.resolve(false);
+    if (!recaptchaLoader) {
+      recaptchaLoader = new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = `https://www.google.com/recaptcha/api.js?render=${encodeURIComponent(CONFIG.recaptchaSiteKey)}`;
+        script.async = true;
+        script.onload = () => resolve(true);
+        script.onerror = () => {
+          recaptchaLoader = null; // permite reintentar en el siguiente envío
+          reject(new Error("No se pudo cargar reCAPTCHA"));
+        };
+        document.head.appendChild(script);
+      });
     }
+    return recaptchaLoader;
+  }
+
+  // Devuelve null si reCAPTCHA no está configurado; el backend rechazará el envío
+  async function getRecaptchaToken() {
+    const loaded = await loadRecaptcha();
+    if (!loaded) return null;
     return new Promise((resolve, reject) => {
       window.grecaptcha.ready(() => {
         window.grecaptcha
@@ -355,7 +382,6 @@
       });
     });
   }
-
   /* ---------- 8. FORMULARIO ---------- */
 
   // Estados: idle → submitting → success | error (frontend.md §14)
@@ -448,9 +474,18 @@
     }
   }
 
-  function initForm() {
+    function initForm() {
     if (!dom.form) return;
     dom.form.addEventListener("submit", handleSubmit);
+    dom.form.addEventListener(
+      "focusin",
+      () => {
+        loadRecaptcha().catch(() => {
+          // Intencional: si falla aquí, getRecaptchaToken vuelve a intentarlo al enviar
+        });
+      },
+      { once: true }
+    );
     dom.copyEmailButton.addEventListener("click", handleCopyEmail);
   }
 
