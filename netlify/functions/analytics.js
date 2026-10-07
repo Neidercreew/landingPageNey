@@ -46,6 +46,7 @@ exports.handler = async (event) => {
         "CTA Type": click.ctaType,
         "Session ID": click.sessionId,
         Source: click.source,
+        "Click Date": new Date().toISOString(),
       },
     });
 

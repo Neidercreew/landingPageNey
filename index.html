@@ -334,7 +334,10 @@ app.<span class="tok-fn">post</span>(<span class="tok-str">'/api/contact'</span>
             <textarea id="message" name="message" class="form__input form__textarea" required maxlength="2000" rows="5"
                       data-i18n-placeholder="contact.message_ph" placeholder="Cuéntame brevemente qué necesitas"></textarea>
           </div>
-
+          <label class="form__consent">
+            <input type="checkbox" id="privacy-consent" name="privacy_consent" value="yes" required>
+            <span data-i18n="contact.consent">Autorizo el tratamiento de mis datos personales (nombre y correo) solo para responder este mensaje, conforme a la Ley 1581 de 2012. Puedo pedir que se eliminen en cualquier momento escribiendo a neidercreew@gmail.com.</span>
+          </label>
           <!-- Honeypot: invisible para humanos, los bots lo llenan -->
           <div class="form__honeypot" aria-hidden="true">
             <label for="website">Website</label>
@@ -366,7 +369,7 @@ app.<span class="tok-fn">post</span>(<span class="tok-str">'/api/contact'</span>
       </div>
       <ul class="footer__social">
         <li><a href="https://www.linkedin.com/in/neider-pe%C3%B1a-478a02409/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-        <li><a href="https://github.com/Neidercreew" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        <li><a href="https://github.com/Neidercreew/landingPageNey" target="_blank" rel="noopener noreferrer">GitHub</a></li>
       </ul>
       <p class="footer__copy">© 2026 Neider Steven Peña Riaño</p>
       <p class="footer__availability" data-i18n="footer.availability">Analista de Datos · Desarrollador Full Stack Junior</p>

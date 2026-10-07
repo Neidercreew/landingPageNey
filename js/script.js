@@ -423,6 +423,7 @@
       interest_type: value("interest_type"),
       session_id: getSessionId(),
       honeypot: value("website"),
+      privacy_consent: data.get("privacy_consent") === "yes",
       recaptcha_token: recaptchaToken,
     };
   }

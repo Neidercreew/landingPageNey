@@ -32,10 +32,18 @@ const LIMITS = Object.freeze({ name: 100, email: 254, message: 2000, recaptchaTo
 const INTEREST_LABELS = Object.freeze({ empleo: "Empleo", freelance: "Freelance" });
 const INITIAL_FOLLOW_UP_STATUS = "Nuevo";
 
+// reCAPTCHA es opcional: se activa al configurar RECAPTCHA_SECRET_KEY en Netlify
+const isRecaptchaEnabled = () => Boolean(process.env.RECAPTCHA_SECRET_KEY);
+
 function validateContact(body) {
   const email = requireText(body.email, "email", LIMITS.email).toLowerCase();
   if (!isValidEmail(email)) {
     throw new HttpError(400, "El email no tiene un formato válido");
+  }
+
+  // Ley 1581: sin autorización expresa no se almacenan datos personales
+  if (body.privacy_consent !== true) {
+    throw new HttpError(400, "Debes autorizar el tratamiento de tus datos para enviar el mensaje");
   }
 
   return {
@@ -44,7 +52,9 @@ function validateContact(body) {
     message: requireText(body.message, "mensaje", LIMITS.message),
     interestType: requireOneOf(body.interest_type, Object.keys(INTEREST_LABELS), "tipo de interés"),
     sessionId: requireUuid(body.session_id, "session_id"),
-    recaptchaToken: requireText(body.recaptcha_token, "recaptcha_token", LIMITS.recaptchaToken),
+    recaptchaToken: isRecaptchaEnabled()
+      ? requireText(body.recaptcha_token, "recaptcha_token", LIMITS.recaptchaToken)
+      : null,
   };
 }
 
@@ -52,7 +62,7 @@ function formatBogotaDate(date) {
   return date.toLocaleString("es-CO", { timeZone: "America/Bogota", dateStyle: "long", timeStyle: "short" });
 }
 
-async function saveContact(contact) {
+async function saveContact(contact, submittedAt) {
   await createAirtableRecord({
     baseId: getEnv("AIRTABLE_BASE_ID"),
     table: process.env.AIRTABLE_CONTACTS_TABLE || "Contacts",
@@ -62,20 +72,29 @@ async function saveContact(contact) {
       "Interest Type": INTEREST_LABELS[contact.interestType],
       Message: contact.message,
       "Session ID": contact.sessionId,
+      "Submission Date": submittedAt.toISOString(),
+      "Privacy Consent": true,
       "Follow-up Status": INITIAL_FOLLOW_UP_STATUS,
     },
   });
 }
 
-async function notifyOwner(contact) {
+async function notifyOwner(contact, submittedAt) {
+  const interest = INTEREST_LABELS[contact.interestType];
+  const date = formatBogotaDate(submittedAt);
   await sendEmailNotification({
     to_email: getEnv("NOTIFICATION_EMAIL"),
     from_name: contact.name,
     from_email: contact.email,
     reply_to: contact.email,
-    interest_type: INTEREST_LABELS[contact.interestType],
+    interest_type: interest,
     message: contact.message,
-    submission_date: formatBogotaDate(new Date()),
+    submission_date: date,
+    // Alias que usa la plantilla "Contact Us" de EmailJS, para que funcione sin editarla
+    name: contact.name,
+    email: contact.email,
+    title: `${interest} - ${contact.name}`,
+    time: date,
   });
 }
 
@@ -94,17 +113,20 @@ exports.handler = async (event) => {
 
     const contact = validateContact(body);
 
-    const isHuman = await verifyRecaptcha(contact.recaptchaToken, RECAPTCHA_ACTION, getClientIp(event));
-    if (!isHuman) {
-      throw new HttpError(400, "No pudimos verificar el envío. Intenta de nuevo.");
+    if (isRecaptchaEnabled()) {
+      const isHuman = await verifyRecaptcha(contact.recaptchaToken, RECAPTCHA_ACTION, getClientIp(event));
+      if (!isHuman) {
+        throw new HttpError(400, "No pudimos verificar el envío. Intenta de nuevo.");
+      }
     }
 
-    await saveContact(contact);
+    const submittedAt = new Date();
+    await saveContact(contact, submittedAt);
 
     // El contacto ya quedó guardado: si el correo falla, no se pide al visitante reenviar
     // (evita registros duplicados). El error queda en los logs de Netlify.
     try {
-      await notifyOwner(contact);
+      await notifyOwner(contact, submittedAt);
     } catch (error) {
       console.error(`[${FUNCTION_NAME}] Contacto guardado, pero falló la notificación: ${error.message}`);
     }

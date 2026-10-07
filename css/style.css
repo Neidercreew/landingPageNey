@@ -1127,7 +1127,24 @@ button {
   min-height: 140px;
   resize: vertical;
 }
+/* Autorización de tratamiento de datos (Ley 1581) */
+.form__consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-text-soft);
+  cursor: pointer;
+}
 
+.form__consent input {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin: 0.125rem 0 0;
+  accent-color: var(--color-primary);
+}
 /* Honeypot: fuera de pantalla, sin display:none para no alertar bots */
 .form__honeypot {
   position: absolute;
