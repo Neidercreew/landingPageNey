@@ -2,7 +2,7 @@
    Neider Peña — Lógica de cliente
    Orden: 1. Configuración · 2. Utilidades · 3. Idioma
           4. Navegación · 5. Proyectos y animaciones
-          6. Analytics · 7. reCAPTCHA · 8. Formulario · 9. Inicio
+          6. Analytics y WhatsApp · 7. reCAPTCHA · 8. Formulario · 9. Inicio
    ========================================================= */
 
 "use strict";
@@ -24,12 +24,17 @@
     // Se completa en el paso de backend, al registrar el sitio en Google reCAPTCHA v3
     recaptchaSiteKey: "",
     recaptchaAction: "contact",
+    // Número en formato internacional para wa.me: 57 (Colombia) + número, sin espacios ni "+"
+    whatsappNumber: "573208305907",
+    // Margen para considerar visibles el contacto y el footer antes de que lleguen al borde
+    fabHideRootMargin: "0px 0px -80px 0px",
   });
 
   // Valores que espera la función de analytics (ver backend.md §3.2)
   const CTA_TYPES = Object.freeze({
     empleo: "employment_inquiry",
     freelance: "freelance_service",
+    whatsapp: "whatsapp_contact",
   });
 
   const dom = {
@@ -48,6 +53,12 @@
     submitButton: document.getElementById("form-submit"),
     status: document.getElementById("form-status"),
     copyEmailButton: document.getElementById("copy-email"),
+    drawerLinks: document.querySelectorAll(".nav__drawer-link"),
+    whatsappLinks: document.querySelectorAll(".js-whatsapp"),
+    whatsappFab: document.getElementById("whatsapp-fab"),
+    hero: document.getElementById("hero"),
+    contact: document.getElementById("contact"),
+    footer: document.getElementById("footer"),
   };
 
   const hasTranslations = typeof TRANSLATIONS !== "undefined";
@@ -145,6 +156,13 @@
       if (text) el.setAttribute("aria-label", text);
     });
 
+    document.querySelectorAll("[data-i18n-alt]").forEach((el) => {
+      const text = t(el.dataset.i18nAlt);
+      if (text) el.setAttribute("alt", text);
+    });
+
+    updateWhatsappLinks();
+
     // El botón muestra el idioma al que se va a cambiar
     dom.langToggle.textContent = currentLang === "es" ? "EN" : "ES";
     dom.langToggle.setAttribute("aria-label", t("nav.lang_switch"));
@@ -189,6 +207,7 @@
     dom.overlay.hidden = false;
     document.body.style.overflow = "hidden";
     updateMenuToggleLabel();
+    updateWhatsappFab();
     dom.navLinks[0]?.focus();
   }
 
@@ -199,6 +218,7 @@
     dom.overlay.hidden = true;
     document.body.style.overflow = "";
     updateMenuToggleLabel();
+    updateWhatsappFab();
     if (returnFocus) dom.menuToggle.focus();
   }
 
@@ -210,7 +230,7 @@
 
     dom.overlay.addEventListener("click", () => closeMenu());
 
-    dom.navLinks.forEach((link) => {
+    [...dom.navLinks, ...dom.drawerLinks].forEach((link) => {
       link.addEventListener("click", () => closeMenu({ returnFocus: false }));
     });
 
@@ -309,7 +329,7 @@
     });
   }
 
-  /* ---------- 6. ANALYTICS ---------- */
+  /* ---------- 6. ANALYTICS Y WHATSAPP ---------- */
 
   // Un registro por CTA y ubicación en cada visita: cuida el límite de registros
   // del plan gratuito de Airtable sin perder la medición de conversión
@@ -317,9 +337,12 @@
 
   // Rastreo silencioso (backend.md §4.1): si falla, no debe afectar al visitante
   function trackCtaClick(interest, source) {
-    const ctaType = CTA_TYPES[interest];
+    trackClick(CTA_TYPES[interest], source);
+  }
+
+  function trackClick(ctaType, source) {
     const clickKey = `${ctaType}:${source}`;
-    if (!ctaType || trackedClicks.has(clickKey)) return;
+    if (!ctaType || !source || trackedClicks.has(clickKey)) return;
     trackedClicks.add(clickKey);
 
     postJSON(
@@ -329,6 +352,58 @@
     ).catch(() => {
       // Intencional: el analytics nunca bloquea ni muestra errores al usuario
     });
+  }
+
+  function buildWhatsappUrl() {
+    const message = t("whatsapp.message");
+    const query = message ? `?text=${encodeURIComponent(message)}` : "";
+    return `https://wa.me/${CONFIG.whatsappNumber}${query}`;
+  }
+
+  // El mensaje inicial sigue el idioma activo
+  function updateWhatsappLinks() {
+    const url = buildWhatsappUrl();
+    dom.whatsappLinks.forEach((link) => {
+      link.href = url;
+    });
+  }
+
+  // Estado de las zonas que ya ofrecen WhatsApp (o donde el botón estorbaría)
+  const fabBlockers = new Set();
+
+  function updateWhatsappFab() {
+    if (!dom.whatsappFab) return;
+    const visible = fabBlockers.size === 0 && !isMenuOpen();
+    dom.whatsappFab.classList.toggle("is-visible", visible);
+  }
+
+  function initWhatsapp() {
+    updateWhatsappLinks();
+
+    dom.whatsappLinks.forEach((link) => {
+      link.addEventListener("click", () => trackClick(CTA_TYPES.whatsapp, link.dataset.waSource));
+    });
+
+    if (!dom.whatsappFab) return;
+    if (!("IntersectionObserver" in window)) {
+      // Sin IntersectionObserver el botón queda siempre visible: es mejor que ocultarlo
+      dom.whatsappFab.classList.add("is-visible");
+      return;
+    }
+
+    // Oculto sobre el hero (ya hay CTAs), en el contacto y en el footer (tienen su propio enlace)
+    const zones = [dom.hero, dom.contact, dom.footer].filter(Boolean);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) fabBlockers.add(entry.target);
+          else fabBlockers.delete(entry.target);
+        });
+        updateWhatsappFab();
+      },
+      { rootMargin: CONFIG.fabHideRootMargin }
+    );
+    zones.forEach((zone) => observer.observe(zone));
   }
 
   function selectInterest(interest) {
@@ -475,7 +550,7 @@
     }
   }
 
-    function initForm() {
+  function initForm() {
     if (!dom.form) return;
     dom.form.addEventListener("submit", handleSubmit);
     dom.form.addEventListener(
@@ -499,5 +574,6 @@
   initFilters();
   initReveal();
   initCtas();
+  initWhatsapp();
   initForm();
 })();
