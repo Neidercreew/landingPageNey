@@ -18,6 +18,15 @@ const TRANSLATIONS = Object.freeze({
     "common.skip": "Saltar al contenido",
     "common.tag_data": "Datos",
     "common.tag_dev": "Desarrollo",
+    "common.new_tab": "(se abre en una pestaña nueva)",
+
+    /* Redes y WhatsApp */
+    "social.github": "GitHub de Neider Peña (se abre en una pestaña nueva)",
+    "social.linkedin": "LinkedIn de Neider Peña (se abre en una pestaña nueva)",
+    "whatsapp.fab_label": "Escríbeme por WhatsApp (se abre en una pestaña nueva)",
+    "whatsapp.contact_title": "¿Prefieres algo inmediato?",
+    "whatsapp.contact_text": "Escríbeme por WhatsApp y hablamos.",
+    "whatsapp.message": "Hola Neider, vi tu portafolio y me gustaría hablar contigo.",
 
     /* Navegación */
     "nav.aria": "Navegación principal",
@@ -33,6 +42,7 @@ const TRANSLATIONS = Object.freeze({
     /* Hero */
     "hero.status": "Disponible para vacantes y proyectos freelance",
     "hero.greeting": "Hola, soy",
+    "hero.photo_alt": "Foto de Neider Steven Peña Riaño",
     "hero.role_data": "Analista de Datos",
     "hero.role_dev": "Desarrollador Full Stack Junior",
     "hero.description": "Transformo datos en decisiones y construyo el software que las hace posibles: desde la consulta SQL hasta la API y la app que la usa.",
@@ -140,6 +150,15 @@ const TRANSLATIONS = Object.freeze({
     "common.skip": "Skip to content",
     "common.tag_data": "Data",
     "common.tag_dev": "Development",
+    "common.new_tab": "(opens in a new tab)",
+
+    /* Social and WhatsApp */
+    "social.github": "Neider Peña on GitHub (opens in a new tab)",
+    "social.linkedin": "Neider Peña on LinkedIn (opens in a new tab)",
+    "whatsapp.fab_label": "Message me on WhatsApp (opens in a new tab)",
+    "whatsapp.contact_title": "Prefer something faster?",
+    "whatsapp.contact_text": "Message me on WhatsApp and let's talk.",
+    "whatsapp.message": "Hi Neider, I saw your portfolio and I'd like to talk with you.",
 
     /* Navigation */
     "nav.aria": "Main navigation",
@@ -155,6 +174,7 @@ const TRANSLATIONS = Object.freeze({
     /* Hero */
     "hero.status": "Open to job opportunities and freelance projects",
     "hero.greeting": "Hi, I'm",
+    "hero.photo_alt": "Photo of Neider Steven Peña Riaño",
     "hero.role_data": "Data Analyst",
     "hero.role_dev": "Junior Full Stack Developer",
     "hero.description": "I turn data into decisions and build the software that makes them possible: from the SQL query to the API and the app that uses it.",
