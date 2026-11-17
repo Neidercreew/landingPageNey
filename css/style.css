@@ -1059,6 +1059,22 @@ button {
   color: var(--color-primary);
 }
 
+/* Varios enlaces en una misma tarjeta */
+.project__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  padding-top: var(--space-2);
+}
+
+.project__actions .project__link {
+  padding-top: 0;
+}
+
+.project__link.project__link--external::after {
+  content: "↗";
+}
+
 .project__link::after {
   content: "→";
   transition: transform 0.2s var(--ease);
