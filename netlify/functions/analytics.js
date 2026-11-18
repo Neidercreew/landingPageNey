@@ -19,8 +19,9 @@ const {
 const { createAirtableRecord } = require("../lib/services");
 
 const FUNCTION_NAME = "analytics";
-const CTA_TYPES = Object.freeze(["employment_inquiry", "freelance_service"]);
-const SOURCES = Object.freeze(["hero", "footer"]);
+const CTA_TYPES = Object.freeze(["employment_inquiry", "freelance_service", "whatsapp_contact"]);
+// hero/footer: botones de vacante y proyecto; menu/contact/fab: enlaces de WhatsApp
+const SOURCES = Object.freeze(["hero", "footer", "menu", "contact", "fab"]);
 
 function validateClick(body) {
   return {

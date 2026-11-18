@@ -79,10 +79,11 @@ async function saveContact(contact, submittedAt) {
   });
 }
 
-async function notifyOwner(contact, submittedAt) {
+/** Variables que recibe la plantilla de EmailJS (también las usa scripts/test-emailjs.js) */
+function buildNotificationParams(contact, submittedAt) {
   const interest = INTEREST_LABELS[contact.interestType];
   const date = formatBogotaDate(submittedAt);
-  await sendEmailNotification({
+  return {
     to_email: getEnv("NOTIFICATION_EMAIL"),
     from_name: contact.name,
     from_email: contact.email,
@@ -95,8 +96,14 @@ async function notifyOwner(contact, submittedAt) {
     email: contact.email,
     title: `${interest} - ${contact.name}`,
     time: date,
-  });
+  };
 }
+
+async function notifyOwner(contact, submittedAt) {
+  await sendEmailNotification(buildNotificationParams(contact, submittedAt));
+}
+
+exports.buildNotificationParams = buildNotificationParams;
 
 exports.handler = async (event) => {
   const earlyResponse = handlePreflightAndMethod(event);

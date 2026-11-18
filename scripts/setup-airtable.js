@@ -47,7 +47,7 @@ const SCHEMA = [
     name: "Analytics",
     fields: [
       { name: "Session ID", type: "singleLineText" },
-      selectField("CTA Type", ["employment_inquiry", "freelance_service"]),
+      selectField("CTA Type", ["employment_inquiry", "freelance_service", "whatsapp_contact"]),
       { name: "Source", type: "singleLineText" },
       dateTimeField("Click Date"),
     ],

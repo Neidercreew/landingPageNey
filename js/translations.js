@@ -18,6 +18,15 @@ const TRANSLATIONS = Object.freeze({
     "common.skip": "Saltar al contenido",
     "common.tag_data": "Datos",
     "common.tag_dev": "Desarrollo",
+    "common.new_tab": "(se abre en una pestaña nueva)",
+
+    /* Redes y WhatsApp */
+    "social.github": "GitHub de Neider Peña (se abre en una pestaña nueva)",
+    "social.linkedin": "LinkedIn de Neider Peña (se abre en una pestaña nueva)",
+    "whatsapp.fab_label": "Escríbeme por WhatsApp (se abre en una pestaña nueva)",
+    "whatsapp.contact_title": "¿Prefieres algo inmediato?",
+    "whatsapp.contact_text": "Escríbeme por WhatsApp y hablamos.",
+    "whatsapp.message": "Hola Neider, vi tu portafolio y me gustaría hablar contigo.",
 
     /* Navegación */
     "nav.aria": "Navegación principal",
@@ -33,6 +42,7 @@ const TRANSLATIONS = Object.freeze({
     /* Hero */
     "hero.status": "Disponible para vacantes y proyectos freelance",
     "hero.greeting": "Hola, soy",
+    "hero.photo_alt": "Foto de Neider Steven Peña Riaño",
     "hero.role_data": "Analista de Datos",
     "hero.role_dev": "Desarrollador Full Stack Junior",
     "hero.description": "Transformo datos en decisiones y construyo el software que las hace posibles: desde la consulta SQL hasta la API y la app que la usa.",
@@ -86,6 +96,15 @@ const TRANSLATIONS = Object.freeze({
     "projects.f_data": "Datos",
     "projects.f_dev": "Desarrollo",
     "projects.view_code": "Ver código",
+    "projects.view_tool": "Ver herramienta",
+    "projects.view_demo": "Ver demo",
+    "projects.open_colab": "Abrir en Colab",
+    "projects.p7_tag": "Python · Análisis de riesgo",
+    "projects.p7_title": "Cuadro mágico vs. matriz de riesgo",
+    "projects.p7_text": "Herramienta interactiva para la asignatura de seguridad informática: compara un cuadro mágico (método siamés) con una matriz de riesgo ISO 31000 y prioriza escenarios con el modelo RAV. Incluye pruebas automáticas.",
+    "projects.p8_tag": "Web · Animación",
+    "projects.p8_title": "Invitación digital animada",
+    "projects.p8_text": "Invitación para celular con escenas animadas, ilustraciones SVG hechas en código y música. Todo cabe en un solo archivo HTML que funciona sin internet.",
     "projects.p1_tag": "App móvil · Full Stack",
     "projects.p1_text": "App que enseña a adultos mayores a usar su celular con lecciones progresivas y simuladores seguros. Lidero un equipo de tres desarrolladores.",
     "projects.p2_tag": "MVP · Full Stack",
@@ -140,6 +159,15 @@ const TRANSLATIONS = Object.freeze({
     "common.skip": "Skip to content",
     "common.tag_data": "Data",
     "common.tag_dev": "Development",
+    "common.new_tab": "(opens in a new tab)",
+
+    /* Social and WhatsApp */
+    "social.github": "Neider Peña on GitHub (opens in a new tab)",
+    "social.linkedin": "Neider Peña on LinkedIn (opens in a new tab)",
+    "whatsapp.fab_label": "Message me on WhatsApp (opens in a new tab)",
+    "whatsapp.contact_title": "Prefer something faster?",
+    "whatsapp.contact_text": "Message me on WhatsApp and let's talk.",
+    "whatsapp.message": "Hi Neider, I saw your portfolio and I'd like to talk with you.",
 
     /* Navigation */
     "nav.aria": "Main navigation",
@@ -155,6 +183,7 @@ const TRANSLATIONS = Object.freeze({
     /* Hero */
     "hero.status": "Open to job opportunities and freelance projects",
     "hero.greeting": "Hi, I'm",
+    "hero.photo_alt": "Photo of Neider Steven Peña Riaño",
     "hero.role_data": "Data Analyst",
     "hero.role_dev": "Junior Full Stack Developer",
     "hero.description": "I turn data into decisions and build the software that makes them possible: from the SQL query to the API and the app that uses it.",
@@ -208,6 +237,15 @@ const TRANSLATIONS = Object.freeze({
     "projects.f_data": "Data",
     "projects.f_dev": "Development",
     "projects.view_code": "View code",
+    "projects.view_tool": "Open the tool",
+    "projects.view_demo": "View demo",
+    "projects.open_colab": "Open in Colab",
+    "projects.p7_tag": "Python · Risk analysis",
+    "projects.p7_title": "Magic square vs. risk matrix",
+    "projects.p7_text": "Interactive tool for an information security course: it compares a magic square (Siamese method) with an ISO 31000 risk matrix and ranks scenarios with the RAV model. Includes automated tests.",
+    "projects.p8_tag": "Web · Animation",
+    "projects.p8_title": "Animated digital invitation",
+    "projects.p8_text": "Mobile invitation with animated scenes, SVG illustrations drawn in code and music. Everything fits in a single HTML file that works offline.",
     "projects.p1_tag": "Mobile app · Full Stack",
     "projects.p1_text": "An app that teaches older adults to use their phones through progressive lessons and safe simulators. I lead a team of three developers.",
     "projects.p2_tag": "MVP · Full Stack",
